@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .invoice-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .invoice-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .invoice-details {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice List</h1>
+    <div class="invoice-container">
+        {% for invoice in invoices %}
+            <div class="invoice-card">
+                <h2>{{ invoice.customer_name }}</h2>
+                <p class="invoice-details">Date: {{ invoice.date }}</p>
+                <!-- Add more details as needed -->
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
