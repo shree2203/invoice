@@ -12,6 +12,7 @@
         }
 
         h1 {
+            margin-top: 50px;
             text-align: center;
             color: #333;
         }
@@ -41,15 +42,30 @@
     </style>
 </head>
 <body>
+{% extends 'base.html' %}
+{% block title %}Invoice List{% endblock %}
+{% block content %}
     <h1>Invoice List</h1>
     <div class="invoice-container">
-        {% for invoice in invoices %}
-            <div class="invoice-card">
-                <h2>{{ invoice.customer_name }}</h2>
-                <p class="invoice-details">Date: {{ invoice.date }}</p>
-                <!-- Add more details as needed -->
-            </div>
-        {% endfor %}
+        {% if invoices %}
+            {% for invoice in invoices %}
+                <div class="invoice-card">
+                    <h2>{{ invoice.customer_name }}</h2>
+                    <p class="invoice-details">Date: {{ invoice.date }}</p>
+                    {% for detail in invoice.details %}
+                        <div class="invoice-detail">
+                            <p class="invoice-details">Description: {{ detail.description }}</p>
+                            <p class="invoice-details">Quantity: {{ detail.quantity }}</p>
+                            <p class="invoice-details">Unit Price: {{ detail.unit_price }}</p>
+                            <p class="invoice-details">Price: {{ detail.price }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>No Invoices to Show!!</h2>
+        {% endif %}
     </div>
+{% endblock %}
 </body>
 </html>

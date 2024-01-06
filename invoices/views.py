@@ -1,12 +1,15 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics
 from invoices.forms import InvoiceForm
-from .models import Invoice
+from .models import Invoice, InvoiceDetail
 from .serializers import InvoiceSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+
+def home(request):
+    return render(request, 'home.html')
 
 
 class InvoiceListCreateView(APIView):
@@ -36,8 +39,13 @@ class InvoiceInputView(APIView):
     def post(self, request):
         form = InvoiceForm(request.data)
         if form.is_valid():
-            # Save the data to the database
-            invoice = form.save()
-            serializer = InvoiceSerializer(invoice)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            form_data = form.cleaned_data
+            name = request.data['invoice_customer_name']
+            date = form_data['invoice_date']
+            new_invoice = Invoice.objects.create(date=date, customer_name=name)
+            form_data['invoice'] = new_invoice
+            form_data.pop('invoice_date', None)
+            form_data['price'] = form_data['quantity'] * form_data['unit_price']
+            InvoiceDetail.objects.create(**form_data)
+            return redirect('/invoices/')
         return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
